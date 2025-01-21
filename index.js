@@ -36,7 +36,8 @@ async function run() {
         })
 
         app.get('/availableCars', async (req, res) => {
-            const result = await carBase.find().toArray()
+            const query = { availability: true }
+            const result = await carBase.find(query).toArray()
             res.send(result)
         })
 
@@ -44,6 +45,14 @@ async function run() {
         app.post('/addCar', async (req, res) => {
             const response = req.body;
             const result = await carBase.insertOne(response)
+            res.send(result)
+        })
+
+        app.get('/cars/search', async (req, res) => {
+            const q = req.query.q;
+            console.log(q)
+            const query = { location: { $regex: `\\b${q}`, $options: 'i' }, availability: true }
+            const result = await carBase.find(query).toArray()
             res.send(result)
         })
 
