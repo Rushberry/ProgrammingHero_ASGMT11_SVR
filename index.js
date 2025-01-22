@@ -29,6 +29,7 @@ async function run() {
         // await client.connect();
         const database = client.db("AuraDriveDB");
         const carBase = database.collection("cars");
+        const bookingBase = database.collection("bookings");
 
         // GET APIS
         app.get('/', (req, res) => {
@@ -53,14 +54,14 @@ async function run() {
             const result = await carBase.find(query).toArray()
             res.send(result)
         })
-        
+
         app.get('/car/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await carBase.find(query).toArray()
             res.send(result)
         })
-        
+
         // POST APIS
         app.post('/addCar', async (req, res) => {
             const response = req.body;
@@ -68,6 +69,15 @@ async function run() {
             res.send(result)
         })
 
+        app.post('/booking', async (req, res) => {
+            const response = req.body;
+            const result = await bookingBase.insertOne(response)
+            res.send(result)
+        })
+
+
+
+        
 
 
 
