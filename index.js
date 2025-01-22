@@ -75,6 +75,16 @@ async function run() {
             res.send(result)
         })
 
+        app.patch('/updateBookingCount/:id', async (req, res)  => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const updateCount = {
+                $inc: {bookingCount: 1}
+            }
+            const result = await carBase.updateOne(filter, updateCount, options)
+            res.send(result)
+        })
 
 
         
