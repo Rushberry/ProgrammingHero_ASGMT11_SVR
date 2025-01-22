@@ -41,10 +41,8 @@ async function run() {
             res.send(result)
         })
 
-        // POST APIS
-        app.post('/addCar', async (req, res) => {
-            const response = req.body;
-            const result = await carBase.insertOne(response)
+        app.get('/allCars', async (req, res) => {
+            const result = await carBase.find().toArray()
             res.send(result)
         })
 
@@ -55,6 +53,23 @@ async function run() {
             const result = await carBase.find(query).toArray()
             res.send(result)
         })
+        
+        app.get('/car/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await carBase.find(query).toArray()
+            res.send(result)
+        })
+        
+        // POST APIS
+        app.post('/addCar', async (req, res) => {
+            const response = req.body;
+            const result = await carBase.insertOne(response)
+            res.send(result)
+        })
+
+
+
 
         // await client.db("admin").command({ ping: 1 });
         // console.log("Connected to MongoDB <3");
