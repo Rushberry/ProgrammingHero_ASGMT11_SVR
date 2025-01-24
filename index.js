@@ -47,6 +47,11 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/latestSix', async (req, res) => {
+            const result = await carBase.find().sort({submitDate: -1}).limit(6).toArray()
+            res.send(result)
+        })
+
         app.get('/cars/search', async (req, res) => {
             const q = req.query.q;
             console.log(q)
