@@ -87,6 +87,9 @@ async function run() {
             res.send(result)
         })
 
+
+        // PATCH API
+        
         app.patch('/updateBookingCount/:id', async (req, res)  => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
@@ -97,10 +100,34 @@ async function run() {
             const result = await carBase.updateOne(filter, updateCount, options)
             res.send(result)
         })
-
-
         
-
+        app.patch('/updateCar/:id', async (req, res)  => {
+            const id = req.params.id;
+            const car = req.body;
+            const filter = { _id: new ObjectId(id) }
+            const options = { upsert: true }
+            const updatedCar = {
+                $set: {
+                    carModel: car.carModel,
+                    dailyRentalPrice: car.dailyRentalPrice,
+                    availability: car.availability,
+                    vehicleRegistrationNumber: car.vehicleRegistrationNumber,
+                    features: car.features,
+                    description: car.description,
+                    imageUrl: car.imageUrl,
+                    location: car.location,
+                }
+            }
+            const result = await carBase.updateOne(filter, updatedCar, options)
+            res.send(result)
+        })
+        // DELETE API
+        app.delete('/deleteCar/:id', async(req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await carBase.deleteOne(query);
+            res.send(result)
+        })
 
 
         // await client.db("admin").command({ ping: 1 });
