@@ -67,6 +67,13 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/myBookings', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await bookingBase.find(query).toArray()
+            res.send(result)
+        })
+
         app.get('/car/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
@@ -108,14 +115,14 @@ async function run() {
             const options = { upsert: true }
             const updatedCar = {
                 $set: {
-                    carModel: car.carModel,
-                    dailyRentalPrice: car.dailyRentalPrice,
-                    availability: car.availability,
-                    vehicleRegistrationNumber: car.vehicleRegistrationNumber,
-                    features: car.features,
-                    description: car.description,
-                    imageUrl: car.imageUrl,
-                    location: car.location,
+                    carModel: car?.carModel,
+                    dailyRentalPrice: car?.dailyRentalPrice,
+                    availability: car?.availability,
+                    vehicleRegistrationNumber: car?.vehicleRegistrationNumber,
+                    features: car?.features,
+                    description: car?.description,
+                    imageUrl: car?.imageUrl,
+                    location: car?.location,
                 }
             }
             const result = await carBase.updateOne(filter, updatedCar, options)
@@ -126,6 +133,8 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await carBase.deleteOne(query);
+            const booking = {carId : id}
+            const deleteBooking = await bookingBase.deleteMany(booking)
             res.send(result)
         })
 
