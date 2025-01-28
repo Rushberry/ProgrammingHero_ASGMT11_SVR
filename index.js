@@ -161,7 +161,7 @@ async function run() {
 
         // PATCH API
 
-        app.patch('/updateBookingCount/:id', verifyToken, async (req, res) => {
+        app.patch('/updateBookingCount/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
             const options = { upsert: true }
@@ -172,7 +172,7 @@ async function run() {
             res.send(result)
         })
 
-        app.patch('/updateBooking/:id', verifyToken, async (req, res) => {
+        app.patch('/updateBooking/:id', async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) }
             const updateCount = {
