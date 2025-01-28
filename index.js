@@ -19,14 +19,14 @@ app.use(cookieParser())
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token
     // console.log(token)
-    if(!token){
-        return res.status(401).send({message: 'Unauthorized Access : No Token'});
+    if (!token) {
+        return res.status(401).send({ message: 'Unauthorized Access : No Token' });
     }
 
     // Token Verification
     jwt.verify(token, process.env.SECRET_TOKEN, (err, decoded) => {
-        if(err){
-            return res.status(401).send({message: 'Unauthorized Access'});
+        if (err) {
+            return res.status(401).send({ message: 'Unauthorized Access' });
         }
         req.user = decoded;
         next()
@@ -61,7 +61,8 @@ async function run() {
             res
                 .cookie('token', token, {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
                 })
                 .send({ success: true })
         })
@@ -70,7 +71,8 @@ async function run() {
             res
                 .clearCookie('token', {
                     httpOnly: true,
-                    secure: process.env.NODE_ENV === "production",
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
                 })
                 .send({ success: true })
         })
@@ -108,9 +110,9 @@ async function run() {
         app.get('/myCars', verifyToken, async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
-            
-            if(req.user.email !== email){
-                return res.status(403).send({message: 'Forbidden Access'})
+
+            if (req.user.email !== email) {
+                return res.status(403).send({ message: 'Forbidden Access' })
             }
             const result = await carBase.find(query).toArray()
             res.send(result)
@@ -119,8 +121,8 @@ async function run() {
         app.get('/myBookings', verifyToken, async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
-            if(req.user.email !== email){
-                return res.status(403).send({message: 'Forbidden Access'})
+            if (req.user.email !== email) {
+                return res.status(403).send({ message: 'Forbidden Access' })
             }
             const result = await bookingBase.find(query).toArray()
             res.send(result)
@@ -128,8 +130,8 @@ async function run() {
 
         app.get('/confirmed', verifyToken, async (req, res) => {
             const email = req.query.email;
-            if(req.user.email !== email){
-                return res.status(403).send({message: 'Forbidden Access'})
+            if (req.user.email !== email) {
+                return res.status(403).send({ message: 'Forbidden Access' })
             }
             const query = { bookingStatus: "confirmed", email: email };
             const result = await bookingBase.find(query).toArray()
