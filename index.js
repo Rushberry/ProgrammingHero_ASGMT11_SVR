@@ -236,8 +236,8 @@ async function run() {
             const id = req.params.id;
             const query = { _id: new ObjectId(id) };
             const result = await carBase.deleteOne(query);
-            const booking = { carId: id }
-            const deleteBooking = await bookingBase.deleteMany(booking)
+            // const booking = { carId: id }
+            // const deleteBooking = await bookingBase.deleteMany(booking)
             res.send(result)
         })
 
